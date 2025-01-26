@@ -1,7 +1,5 @@
-import os
 import pandas as pd
 import geopandas as gpd
-from src.constants import model_run_params
 
 def read_shp_file(file_path : str,
                   save_file_path : str) -> None:
