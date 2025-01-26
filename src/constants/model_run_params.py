@@ -5,3 +5,5 @@ OCEANS_CSV_FILE_PATH = r"D:\Work\Projects\flights-in-sea\Datasets\OceansAndSeas.
 AIRCRAFT_DATABASE_PATH = r"D:\Work\Projects\flights-in-sea\Datasets\aircraftDatabase.csv"
 
 AIRCRAFT_COLUMNS = ["icao24", "manufacturericao", "manufacturername"]
+
+POSITIONS_COLUMNS = ["time", "icao24", "lat", "lon", "velocity", "heading", "onground", "baroaltitude", "lastposupdate"]

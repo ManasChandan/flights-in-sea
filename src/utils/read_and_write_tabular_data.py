@@ -1,7 +1,10 @@
+import os
+import tarfile
+import tempfile
 from src.spark_session import get_spark_session
 from pyspark.sql import DataFrame
 
-def read_csv_file(file_path, columns=None):
+def read_csv_file(file_path : str, columns=None) -> DataFrame:
     """
     Reads a CSV file using the Spark session and selects specified columns if provided.
 
@@ -22,7 +25,28 @@ def read_csv_file(file_path, columns=None):
 
     return df
 
-def save_df_to_csv(df : DataFrame, output_path : str):
+def read_csv_from_tar(tar_file_path : str, columns : list | None = None) -> DataFrame:
+    """
+    Reads a csv file from the tar file. The csv is compressed using tar file.
+
+    :param tar_file_path: The tar file path.
+    :param columns: Only specific columns to read
+    :return: The read Dataframe
+    """
+    # Extracting the tar file
+    with tempfile.TemporaryDirectory() as temp_dir:
+        with tarfile.open(tar_file_path, 'r') as tar_ref:
+            tar_ref.extractall(path=temp_dir)
+
+        # Creating the path for the csv file
+        csv_file_path = os.path.join(temp_dir, f"{os.path.basename(tar_file_path).split('.')[0]}.csv.gz")
+
+        # reading the csv file
+        df = read_csv_file(csv_file_path, columns)
+
+    return df
+
+def save_df_to_csv(df : DataFrame, output_path : str) -> None:
     """
     Saves a Spark DataFrame to a CSV file.
 
@@ -33,4 +57,4 @@ def save_df_to_csv(df : DataFrame, output_path : str):
     """
 
     # Saves the csv file
-    df.toPandas().to_csv(output_path, index=False)
+    df.toPandas().to_csv(output_path)
