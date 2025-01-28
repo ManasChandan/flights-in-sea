@@ -9,4 +9,4 @@ def test_process_aircraft_live_positions():
     """
     file_path = r"D:\Work\Projects\flights-in-sea\Datasets\Zenodo OpenSky Data\states_2021-05-10-01.csv.tar"
     pos_data = process_aircraft_live_positions.process_aircraft_live_positions(file_path)
-    pos_data.write.format("parquet").save(r"D:\Work\Projects\flights-in-sea\tests\Datasets-2")
+    save_df_to_csv(pos_data.limit(100), r"D:\Work\Projects\flights-in-sea\tests\Datasets\aircraft_live.csv")

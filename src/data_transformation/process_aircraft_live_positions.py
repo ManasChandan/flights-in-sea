@@ -11,7 +11,7 @@ def read_aircraft_positions_data(positions_tar_file_path : str) -> DataFrame:
     """
 
     # Reading the positions data
-    pos_data = read_csv_file(positions_tar_file_path, columns=POSITIONS_COLUMNS)
+    pos_data = read_csv_from_tar(positions_tar_file_path, columns=POSITIONS_COLUMNS)
 
     # return the pos_data
     return pos_data
@@ -54,8 +54,3 @@ def process_aircraft_live_positions(tar_file_path : str) -> DataFrame:
 
     # Return the positions data
     return pos_data
-
-file_path = r"D:\Work\Projects\flights-in-sea\Datasets\states_2021-05-10-00.csv"
-pos_data = process_aircraft_live_positions(file_path)
-pos_data = pos_data.limit(100)
-pos_data.toPandas().to_csv(r"here.csv")

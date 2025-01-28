@@ -1,6 +1,5 @@
 import os
 import tarfile
-import tempfile
 from src.spark_session import get_spark_session
 from pyspark.sql import DataFrame
 
@@ -25,6 +24,31 @@ def read_csv_file(file_path : str, columns=None) -> DataFrame:
 
     return df
 
+def extract_tar_file(tar_file_path : str):
+    """
+    Extracts a tar file and saves the content in some location.
+
+    :param tar_file_path: The tar file path.
+    :return: The folder path where the  tar file is extracted.
+    """
+
+    # Creating the folder path
+    folder_path_for_extraction = os.path.join(
+        os.path.dirname(tar_file_path), os.path.basename(tar_file_path).split('.')[0]
+    )
+
+    # Folder creation
+    if not os.path.exists(folder_path_for_extraction):
+        os.makedirs(folder_path_for_extraction, exist_ok=True)
+
+    print(folder_path_for_extraction)
+
+    # Extraction of the tar file
+    with tarfile.open(tar_file_path, 'r') as tar_ref:
+      tar_ref.extractall(folder_path_for_extraction)
+
+    return folder_path_for_extraction
+
 def read_csv_from_tar(tar_file_path : str, columns : list | None = None) -> DataFrame:
     """
     Reads a csv file from the tar file. The csv is compressed using tar file.
@@ -33,24 +57,23 @@ def read_csv_from_tar(tar_file_path : str, columns : list | None = None) -> Data
     :param columns: Only specific columns to read
     :return: The read Dataframe
     """
-    # Extracting the tar file
-    with tempfile.TemporaryDirectory() as temp_dir:
-        with tarfile.open(tar_file_path, 'r') as tar_ref:
-            tar_ref.extractall(path=temp_dir)
 
-        # Creating the path for the csv file
-        csv_file_path = os.path.join(temp_dir, f"{os.path.basename(tar_file_path).split('.')[0]}.csv.gz")
+    # Extract the .tar file
+    extracted_folder_path = extract_tar_file(tar_file_path)
 
-        # reading the csv file
-        df = read_csv_file(csv_file_path, columns)
+    # csv_file_path
+    csv_file_path = os.path.join(
+        extracted_folder_path, f"{os.path.basename(tar_file_path).split('.')[0]}.csv.gz"
+    )
+
+    # reading the csv file
+    df = read_csv_file(csv_file_path, columns)
 
     return df
 
 def save_df_to_csv(df : DataFrame, output_path : str) -> None:
     """
     Saves a Spark DataFrame to a CSV file.
-
-    I didn't want to do a hadoop setup now, so converting the same first to pandas then doing the operations.
 
     :param df: Spark DataFrame to save
     :param output_path: Path to save the CSV file
