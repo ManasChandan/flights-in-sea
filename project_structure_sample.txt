@@ -1,0 +1,36 @@
+project_name/
+├── requirements.txt
+├── setup.py
+├── src/
+│   ├── __init__.py
+│   ├── data/ 
+│   │   ├── raw/ 
+│   │   │   ├── data1.csv
+│   │   │   ├── data2.json
+│   │   │   └── ...
+│   │   ├── processed/
+│   │   │   ├── data1_clean.csv
+│   │   │   ├── data2_transformed.parquet
+│   │   │   └── ...
+│   ├── utils/ 
+│   │   ├── data_utils.py 
+│   │   ├── spark_utils.py 
+│   │   ├── visualization_utils.py
+│   │   └── ... 
+│   ├── models/ 
+│   │   ├── model1.py
+│   │   ├── model2.py
+│   │   └── ...
+│   ├── pipelines/ 
+│   │   ├── data_pipeline.py 
+│   │   ├── model_pipeline.py
+│   │   └── ... 
+│   ├── streamlit_app.py
+├── tests/ 
+│   ├── test_data_utils.py
+│   ├── test_spark_utils.py
+│   ├── test_models.py
+│   └── ...
+├── Dockerfile
+├── README.md
+└── LICENSE
